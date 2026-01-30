@@ -1,2 +1,11 @@
 .worktrees/
+<<<<<<< HEAD
+.worktrees/
+=======
+node_modules/
+server/node_modules/
+back/node_modules/
+front/node_modules/
+.env
+>>>>>>> system-design
 .worktrees/
