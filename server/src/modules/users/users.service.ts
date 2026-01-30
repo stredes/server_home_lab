@@ -31,6 +31,22 @@ export class UsersService {
     });
   }
 
+  // Lista usuarios con paginación básica.
+  async list(page = 1, limit = 20) {
+    const skip = (page - 1) * limit;
+    const [items, total] = await Promise.all([
+      this.prisma.user.findMany({
+        skip,
+        take: limit,
+        orderBy: { createdAt: 'desc' },
+        include: { roles: { include: { role: true } } },
+      }),
+      this.prisma.user.count(),
+    ]);
+
+    return { items, total, page, limit };
+  }
+
   // Busca usuario con roles para autenticación y RBAC.
   async findByEmail(email: string) {
     return this.prisma.user.findUnique({
