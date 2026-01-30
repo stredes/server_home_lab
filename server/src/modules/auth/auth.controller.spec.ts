@@ -1,0 +1,30 @@
+import { AuthController } from './auth.controller';
+import { AuthService } from './auth.service';
+
+describe('AuthController', () => {
+  it('login firma tokens y setea cookie', async () => {
+    const authService = {
+      validateUser: jest.fn().mockResolvedValue({
+        id: 'u1',
+        email: 'a@b.com',
+        roles: ['admin'],
+      }),
+      signTokens: jest
+        .fn()
+        .mockResolvedValue({ accessToken: 'acc', refreshToken: 'ref' }),
+    } as unknown as AuthService;
+
+    const res = { cookie: jest.fn() } as any;
+    const controller = new AuthController(authService);
+
+    const result = await controller.login(
+      { email: 'a@b.com', password: '123456' },
+      res,
+    );
+
+    expect(authService.validateUser).toHaveBeenCalled();
+    expect(authService.signTokens).toHaveBeenCalled();
+    expect(res.cookie).toHaveBeenCalled();
+    expect(result.accessToken).toBe('acc');
+  });
+});

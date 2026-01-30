@@ -30,4 +30,12 @@ export class UsersService {
       },
     });
   }
+
+  // Busca usuario con roles para autenticación y RBAC.
+  async findByEmail(email: string) {
+    return this.prisma.user.findUnique({
+      where: { email },
+      include: { roles: { include: { role: true } } },
+    });
+  }
 }
